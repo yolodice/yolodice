@@ -23,7 +23,7 @@ body {
 /* ChatBox */
 .chat-list {
     overflow-y: scroll;
-    height: 408px;
+    height: 398px;
     word-wrap: break-word;
     color: #838179;
 }
