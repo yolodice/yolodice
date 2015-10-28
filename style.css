@@ -1,26 +1,49 @@
 body {
     margin-top: 20px;
+    background-color: #0C2D4C;
+    color: #93D2E9;
 }
 
 .navbar .navbar-brand {
-    color: #777777;
+    color: #2D81C4;
 }
 .navbar .brand-name:hover {
     text-decoration: underline;
+    /* color: #000000; */
+}
+
+/* BetBox */
+.lead {
+    color: #CADE7A;
+}
+.mbb {
+    background-color: #67B217;
 }
 
 /* ChatBox */
-
 .chat-list {
     overflow-y: scroll;
-    height: 215px;
+    height: 358px;
     word-wrap: break-word;
+    color: #838179;
+}
+.mcb {
+    background-color: #FEFFFD;
+}
+.cul {
+    color: #6DB122;
 }
 
 .chat-list li {
     /* Since .focus() is used to scroll to last message item,
        turn off the outline that appears by default */
     outline: none;
+    color: #6DB122;
+}
+
+/* ChatUserList */
+.cul {
+    color: #838179;
 }
 
 /* Animation */
@@ -75,6 +98,6 @@ body {
 /* Progress Bar */
 
 .progress-bar-grey {
-    background-color: #767676;
+    background-color: #3E97E9;
     background-image: none;
 }
