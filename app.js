@@ -647,7 +647,7 @@ var betStore = new Store('bet', {
         }
         if (stop) {
           Dispatcher.sendAction("STOP_ROLL");
-          setTimeout(console.log('delayed'), 1000);
+          setTimeout(console.log('delayed'), 10);
         }else {
             betStore.state.betCounter++;
         }
