@@ -85,9 +85,7 @@ helpers.formatDateToTime = function(dateJson) {
   var date = new Date(dateJson);
   return _.padLeft(date.getHours().toString(), 2, '0') +
     ':' +
-    _.padLeft(date.getMinutes().toString(), 2, '0') +
-    ':' +
-    _.padLeft(date.getSeconds().toString(), 2, '0');
+    _.padLeft(date.getMinutes().toString(), 2, '0');
 };
 
 // Number -> Number in range (0, 1)
@@ -117,9 +115,9 @@ helpers.roleToLabelElement = function(role) {
     case 'ADMIN':
       return el.span({className: 'label label-danger'}, 'MP Staff');
     case 'MOD':
-      return el.span({className: 'label label-info'}, '☆V.I.P☆');
+      return el.span({className: 'label label-info'}, '☆Mod☆');
     case 'OWNER':
-      return el.span({className: 'label label-primary'}, '★Owner★');
+      return el.span({className: 'label label-primary'}, '★Admin★');
     default:
       return el.span({className: 'label label-primary'}, '☆');
   }
