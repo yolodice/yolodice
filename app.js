@@ -24,7 +24,7 @@ var config = {
   house_edge: 0.0099,
   chat_buffer_size: 75,
   // - The amount of bets to show on screen in each tab
-  bet_buffer_size: 10
+  bet_buffer_size: 100
 };
 
 ////////////////////////////////////////////////////////////
@@ -85,7 +85,9 @@ helpers.formatDateToTime = function(dateJson) {
   var date = new Date(dateJson);
   return _.padLeft(date.getHours().toString(), 2, '0') +
     ':' +
-    _.padLeft(date.getMinutes().toString(), 2, '0');
+    _.padLeft(date.getMinutes().toString(), 2, '0') +
+    ':' +
+    _.padLeft(date.getSeconds().toString(), 2, '0');
 };
 
 // Number -> Number in range (0, 1)
