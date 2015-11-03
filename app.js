@@ -104,7 +104,7 @@ helpers.calcNumber = function(cond, winProb) {
   if (cond === '<') {
     return winProb * 100;
   } else {
-    return 99.9999 - (winProb * 100);
+    return 99.99 - (winProb * 100);
   }
 };
 
@@ -241,11 +241,6 @@ var MoneyPot = (function() {
       }
     });
   };
-
-  o.tip = function(callbacks) {
-	var endpoint = '/tip';
-	makeMPRequest('POST', undefined, endpoint, callbacks);
-  };
   
   o.getTokenInfo = function(callbacks) {
     var endpoint = '/token';
@@ -276,7 +271,7 @@ var MoneyPot = (function() {
   // - client_seed: Int in range [0, 0^32)
   // - hash: BetHash
   // - cond: '<' | '>'
-  // - number: Int in range [0, 99.9999] that cond applies to
+  // - number: Int in range [0, 99.99] that cond applies to
   // - payout: how many satoshis to pay out total on win (wager * multiplier)
   o.placeSimpleDiceBet = function(bodyParams, callbacks) {
     var endpoint = '/bets/simple-dice';
@@ -472,8 +467,8 @@ var chatStore = new Store('chat', {
 var betStore = new Store('bet', {
   nextHash: undefined,
   wager: {
-    str: '1',
-    num: 1,
+    str: '0.000001',
+    num: 0.000001,
     error: undefined
   },
   multiplier: {
@@ -482,6 +477,47 @@ var betStore = new Store('bet', {
     error: undefined
   },
   hotkeysEnabled: false
+automaticWager: {
+      str: '0.000001',
+      num: 0.000001,
+      error: undefined
+  },
+  automaticMultiplierWager: {
+      str: '2.00',
+      num: 2.00,
+      error: undefined
+  },
+  multiOnLose: {
+    str: '2',
+    error: undefined
+  },
+  clientSeed: {
+    str: '1234567890',
+    num: 1234567890,
+    error:void 0
+  },
+  showAutomaticRoll: false,
+  automaticToggle: false,
+  increaseOnWin: true,
+  increaseOnLose: true,
+  multiOnWin: 0,
+  betCounter: 1,
+  stopMaxBalance: '',
+  stopMinBalance: '',
+  checkBoxNumberOfBet: 'false',
+  checkSpeedOfBet : 'false',
+  disableNumberOfBet: false,
+  NumberOfBetLimit:{
+    str: '',
+    num: 0,
+    error: undefined
+  },
+  profitGained:{
+    str: '',
+    num: 1,
+    error: undefined
+  },
+  betVelocity: 25
 }, function() {
   var self = this;
 
@@ -493,31 +529,233 @@ var betStore = new Store('bet', {
   Dispatcher.registerCallback('UPDATE_WAGER', function(newWager) {
     self.state.wager = _.merge({}, self.state.wager, newWager);
 
-    var n = parseInt(self.state.wager.str, 10);
+    var n = self.state.wager.str;
 
     // If n is a number, ensure it's at least 1 bit
-    if (isFinite(n)) {
-      n = Math.max(n, 1);
+    //if (isFinite(n)) {
+      //n = Math.max(n, 1);
       self.state.wager.str = n.toString();
-    }
+    //}
 
     // Ensure wagerString is a number
-    if (isNaN(n) || /[^\d]/.test(n.toString())) {
-      self.state.wager.error = 'INVALID_WAGER';
+    //if (isNaN(n) || /[^\d]/.test(n.toString())) {
+    if (n < 0.00000001)
+	  self.state.wager.error = 'INVALID_WAGER';
     // Ensure user can afford balance
-    } else if (n * 100 > worldStore.state.user.balance) {
+    } else if (n * 0.00000001 > worldStore.state.user.balance) {
       self.state.wager.error = 'CANNOT_AFFORD_WAGER';
       self.state.wager.num = n;
     } else {
       // wagerString is valid
-      self.state.wager.error = null;
-      self.state.wager.str = n.toString();
-      self.state.wager.num = n;
+	  if (n > 7){
+        self.state.wager.error = 'CANNOT_AFFORD_WAGER';
+        self.state.wager.num = n;
+      } else {
+	    self.state.wager.error = null;
+	    self.state.wager.str = n.toString();
+	    self.state.wager.num = n;
+        if (!betStore.state.automaticToggle) {
+          self.state.profitGained.num = self.state.wager.num;
+        }
+      }
     }
-
+    if (isNumeric(n) && (n < 0.000001)){
+		self.state.wager.error = 'INVALID_WAGER';
+	} else {
+	    self.state.wager.error = null; // z
+	    self.state.wager.str = n.toString(); // z
+	    self.state.wager.num = n; // z
+	}
+	
     self.emitter.emit('change', self.state);
   });
 
+  Dispatcher.registerCallback("UPDATE_CLIENT_SEED",function(t){
+    var n = parseInt(t ,10);
+    isNaN(n)||/[^\d]/.test(n.toString())?
+    self.state.clientSeed.error = "NOT_INTEGER":0>n?
+    self.state.clientSeed.error = "TOO_LOW":
+    n > Math.pow(2, 32) - 1?
+    self.state.clientSeed.error = "TOO_HIGH":(
+    self.state.clientSeed.error = void 0,
+    self.state.clientSeed.str = n.toString(),
+    self.state.clientSeed.num = n),
+    self.emitter.emit("change", self.state)
+  });
+  
+    Dispatcher.registerCallback('UPDATE_AUTOMATIC_WAGER', function(newWager) {
+        self.state.automaticWager = _.merge({}, self.state.automaticWager, newWager);
+        
+        //var n = parseInt(self.state.automaticWager.str, 10);
+		var n = self.state.automaticWager.str;
+        
+        // If n is a number, ensure it's at least 1 bit
+        //if (isFinite(n)) {
+          //n = Math.max(n, 1);
+          self.state.automaticWager.str = n.toString();
+        //}
+        
+        // Ensure wagerString is a number
+        //if (isNaN(n) || /[^\d]/.test(n.toString())) {
+		if (n < 1) {
+          self.state.automaticWager.error = 'INVALID_WAGER';
+        // Ensure user can afford balance
+        } else if (n / 0.00000001 > worldStore.state.user.balance) {
+          self.state.automaticWager.error = 'CANNOT_AFFORD_WAGER';
+          self.state.automaticWager.num = n;
+        } else {
+          // wagerString is valid
+          self.state.automaticWager.error = null;
+          self.state.automaticWager.str = n.toString();
+          self.state.automaticWager.num = n;
+        }
+          self.state.automaticWager.error = null;
+          self.state.automaticWager.str = n.toString();
+          self.state.automaticWager.num = n;
+        
+        self.emitter.emit('change', self.state);
+    });
+    
+    Dispatcher.registerCallback('AUTOMATIC_BET_WAGER_STATE', function() {
+        console.log('[BetStore] received AUTOMATIC_BET_WAGER_STATE');
+        betStore.state.automaticToggle = !betStore.state.automaticToggle;
+        self.emitter.emit('change', self.state);
+    });
+    
+    Dispatcher.registerCallback('AUTOMATE_TOGGLE_ROLL', function() {
+        console.log('[BetStore] received AUTOMATE_TOGGLE_ROLL');
+        betStore.state.automaticToggle = true;
+        var balance = worldStore.state.user.balance * 0.00000001;
+        var stop = false;
+        if(betStore.state.checkBoxNumberOfBet === 'true' && (betStore.state.betCounter + 1) == self.state.NumberOfBetLimit.str){
+            stop = true;
+        } 
+        if (!isNaN(parseInt(betStore.state.stopMinBalance))) {
+            if (betStore.state.stopMinBalance >= balance) {
+              stop = true;
+            }
+        }
+        if (!isNaN(parseInt(betStore.state.stopMaxBalance))) {
+            if (betStore.state.stopMaxBalance <= balance) {
+              stop = true;
+            }
+        }
+        if (stop) {
+          Dispatcher.sendAction("STOP_ROLL");
+          setTimeout(console.log('delayed'), 1000);
+        }else {
+            betStore.state.betCounter++;
+        }
+        self.emitter.emit('change', self.state);
+    });
+    
+    Dispatcher.registerCallback('TOGGLE_SHOW_AUTOMATIC_ROLL', function() {
+        console.log('[BetStore] received TOGGLE_SHOW_AUTOMATIC_ROLL');
+        betStore.state.showAutomaticRoll = !betStore.state.showAutomaticRoll;
+        betStore.state.increaseOnWin = true;
+        betStore.state.increaseOnLose = true;
+        betStore.state.checkBoxNumberOfBet = false;
+        self.emitter.emit('change', self.state);
+    });
+  
+    Dispatcher.registerCallback("SET_AUTOMATIC_NUMBER_OF_BETS", function(stateNumberOfBet){
+        betStore.state.checkBoxNumberOfBet = stateNumberOfBet;
+        if(betStore.state.checkBoxNumberOfBet === 'true'){
+            betStore.state.disableNumberOfBet = false;
+        }else{
+            betStore.state.disableNumberOfBet = true;
+        }
+        self.emitter.emit('change', self.state);
+    });
+    
+    
+    Dispatcher.registerCallback("AUGMENT_PROFIT", function(multi){
+        var profitQuantity = betStore.state.profitGained.num * Number(multi);
+        var balanceQuantity = worldStore.state.user.balance * 0.00000001;
+        if(balanceQuantity > profitQuantity){
+            betStore.state.profitGained.num = profitQuantity;
+            //betStore.state.profitGained.num = Number(betStore.state.profitGained.num.toFixed(0));
+			betStore.state.profitGained.num = Number(betStore.state.profitGained.num);
+        }else{
+            Dispatcher.sendAction("STOP_ROLL");
+        }
+        self.emitter.emit('change', self.state);
+    });
+    Dispatcher.registerCallback("RETURN_BASE_BET", function(){
+        betStore.state.profitGained.num = betStore.state.wager.num;
+    });
+    Dispatcher.registerCallback("SET_MULTI_ON_WIN", function(multiOnWin){
+        var n = parseInt(multiOnWin, 10);
+        if (isNaN(n) || /[^\d]/.test(n.toString())) {
+          betStore.state.multiOnWin = '';
+          self.state.multiOnLose.error = 'INVALID_AUTO_MULTIPLIER';
+        }else {
+          self.state.multiOnLose.error = null;
+          betStore.state.multiOnWin = n;
+        }
+        self.emitter.emit('change', self.state);
+    });
+    Dispatcher.registerCallback("SET_MULTI_ON_LOSE", function(multiOnLose){
+        //var n = parseInt(multiOnLose, 10);
+		var n = multiOnLose;
+        if (isNaN(n) || /[^\d]/.test(n.toString())) {
+          betStore.state.multiOnLose.str = '';
+          betStore.state.multiOnLose.error = 'INVALID_AUTO_MULTIPLIER';
+        }else {
+          betStore.state.multiOnLose.error = null;
+          betStore.state.multiOnLose.str = n;
+        }
+          betStore.state.multiOnLose.error = null;
+          betStore.state.multiOnLose.str = n;
+        self.emitter.emit('change', self.state);
+    });
+    Dispatcher.registerCallback("SET_STOP_MAX_BALANCE", function(stopMaxBalance){
+      //var n = parseInt(stopMaxBalance, 10);
+      		var n = stopMaxBalance;
+      if (isNaN(n) || /[^\d]/.test(n.toString())) {
+        betStore.state.stopMaxBalance = '';
+      }else {
+      	betStore.state.stopMaxBalance.error = null;
+        betStore.state.stopMaxBalance = n;
+      }
+      betStore.state.stopMaxBalance.error = null;
+      betStore.state.stopMaxBalance = n;
+    self.emitter.emit('change', self.state);
+    });
+    Dispatcher.registerCallback("SET_STOP_MIN_BALANCE", function(stopMinBalance){
+      //var n = parseInt(stopMinBalance, 10);
+      		var n = stopMinBalance;
+      if (isNaN(n) || /[^\d]/.test(n.toString())) {
+        betStore.state.stopMinBalance = '';
+      }else {
+      	betStore.state.stopMinBalance.error = null;
+        betStore.state.stopMinBalance = n;
+      }
+      betStore.state.stopMinBalance.error = null;
+      betStore.state.stopMinBalance = n;
+    self.emitter.emit('change', self.state);
+    });
+    
+    Dispatcher.registerCallback("STOP_ROLL", function(){
+        betStore.state.automaticToggle = false;
+        betStore.state.betCounter = 1;
+        betStore.state.profitGained.num = betStore.state.wager.num;
+        self.emitter.emit('change', self.state);
+    });
+    Dispatcher.registerCallback("RETURN_BASE_BET", function(){
+        betStore.state.profitGained.num = betStore.state.wager.num;
+    });
+   
+    Dispatcher.registerCallback('UPDATE_NUMBER_OF_BETS_LIMIT', function(limit) {
+        self.state.NumberOfBetLimit = _.merge({}, self.state.automaticMultiplierWager, limit);
+        self.emitter.emit('change', self.state);
+    });
+  
+  Dispatcher.registerCallback('UPDATE_MULTIPLIER', function(newMult) {
+    self.state.multiplier = _.merge({}, self.state.multiplier, newMult);
+    self.emitter.emit('change', self.state);
+  });
+});
   Dispatcher.registerCallback('UPDATE_MULTIPLIER', function(newMult) {
     self.state.multiplier = _.merge({}, self.state.multiplier, newMult);
     self.emitter.emit('change', self.state);
