@@ -2,30 +2,30 @@
 
 // Customize these configuration settings:
 
-var config = {
-  // - Your app's id on moneypot.com
-  app_id: 497,                             // <----------------------------- EDIT ME!
-  // - Displayed in the navbar
-  app_name: '★Invest Dice★฿ ~ 1% House edge' ,
-  // - For your faucet to work, you must register your site at Recaptcha
-  // - https://www.google.com/recaptcha/intro/index.html
-  recaptcha_sitekey: '6LfaxAsTAAAAAB-08wFZ6KVZQ9ez_wS7anE0wa1D',  // <----- EDIT ME!
-  redirect_uri: 'https://investdice.github.io',
-  mp_browser_uri: 'https://www.moneypot.com',
-  mp_api_uri: 'https://api.moneypot.com',
-  chat_uri: '//socket.moneypot.com',
-  // - Show debug output only if running on localhost
-  debug: isRunningLocally(),
-  // - Set this to true if you want users that come to http:// to be redirected
-  //   to https://
-  force_https_redirect: !isRunningLocally(),
-  // - Configure the house edge (default is 1%)
-  //   Must be between 0.0 (0%) and 1.0 (100%)
-  house_edge: 0.01,
-  chat_buffer_size: 50,
-  // - The amount of bets to show on screen in each tab
-  bet_buffer_size: 25
-};
+5 var config = { 
+6   // - Your app's id on moneypot.com 
+7   app_id: 685,                             // <----------------------------- EDIT ME! 
+8   // - Displayed in the navbar 
+9   app_name: '99 DICE', 
+10   // - For your faucet to work, you must register your site at Recaptcha 
+11   // - https://www.google.com/recaptcha/intro/index.html 
+12   recaptcha_sitekey: '6LdByQ8TAAAAAO2uQJeJsm3rhVfHZTFNcOC51MZX',  // <----- EDIT ME! 
+13   redirect_uri: 'https://99dice.github.io', 
+14   mp_browser_uri: 'https://www.moneypot.com', 
+15   mp_api_uri: 'https://api.moneypot.com', 
+16   chat_uri: '//socket.moneypot.com', 
+17   // - Show debug output only if running on localhost 
+18   debug: isRunningLocally(), 
+19   // - Set this to true if you want users that come to http:// to be redirected 
+20   //   to https:// 
+21   force_https_redirect: !isRunningLocally(), 
+22   // - Configure the house edge (default is 1%) 
+23   //   Must be between 0.0 (0%) and 1.0 (100%) 
+24   house_edge: 0.03, 
+25   chat_buffer_size: 50, 
+26   // - The amount of bets to show on screen in each tab 
+27   bet_buffer_size: 25 
+28 }; 
 
 ////////////////////////////////////////////////////////////
 // You shouldn't have to edit anything below this line
