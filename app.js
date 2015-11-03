@@ -242,6 +242,11 @@ var MoneyPot = (function() {
     });
   };
 
+  o.tip = function(callbacks) {
+	var endpoint = '/tip';
+	makeMPRequest('POST', undefined, endpoint, callbacks);
+  };
+  
   o.getTokenInfo = function(callbacks) {
     var endpoint = '/token';
     makeMPRequest('GET', undefined, endpoint, callbacks);
