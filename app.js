@@ -1504,7 +1504,10 @@ var BetBoxWager = React.createClass({
     Dispatcher.sendAction('UPDATE_WAGER', { str: str });
   },
   _onHalveWager: function() {
-    var newWager = Math.round(betStore.state.wager.num / 2);
+    //var newWager = Math.round(betStore.state.wager.num / 2);
+	if (betStore.state.wager.num != 0){
+		var newWager = (betStore.state.wager.num / 2);
+	}	
     Dispatcher.sendAction('UPDATE_WAGER', { str: newWager.toString() });
   },
   _onDoubleWager: function() {
@@ -1815,6 +1818,11 @@ var BetBox = React.createClass({
   },
   componentWillUnmount: function() {
     worldStore.off('change', this._onStoreChange);
+  },
+   _onClientSeedChange:function(e){
+    var str = e.target.value;
+    Dispatcher.sendAction("UPDATE_CLIENT_SEED", str);
+    this.forceUpdate();
   },
   render: function() {
     return el.div(
