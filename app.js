@@ -6,11 +6,11 @@ var config = {
   // - Your app's id on moneypot.com
   app_id: 685,                             // <----------------------------- EDIT ME!
   // - Displayed in the navbar
-  app_name: '99 DICE',
+  app_name: '99 Dice',
   // - For your faucet to work, you must register your site at Recaptcha
   // - https://www.google.com/recaptcha/intro/index.html
   recaptcha_sitekey: '6Lfmaw8TAAAAAKFrpUwt1uKoXVxfJTKbklGf4Cq6',  // <----- EDIT ME!
-  redirect_uri: 'https://NintyNine.github.io',
+  redirect_uri: 'https://99dice.github.io',
   mp_browser_uri: 'https://www.moneypot.com',
   mp_api_uri: 'https://api.moneypot.com',
   chat_uri: '//socket.moneypot.com',
@@ -94,7 +94,7 @@ helpers.multiplierToWinProb = function(multiplier) {
   console.assert(multiplier > 0);
 
   // For example, n is 0.99 when house edge is 1%
-  var n = 2.99 - config.house_edge;
+  var n = 1.0 - config.house_edge;
 
   return n / multiplier;
 };
@@ -115,9 +115,9 @@ helpers.roleToLabelElement = function(role) {
     case 'ADMIN':
       return el.span({className: 'label label-danger'}, 'MP Staff');
     case 'MOD':
-      return el.span({className: 'label label-info'}, 'Lieutnenant');
+      return el.span({className: 'label label-info'}, '☆V.I.P☆');
     case 'OWNER':
-      return el.span({className: 'label label-primary'}, '★Commander★');
+      return el.span({className: 'label label-primary'}, '★Owner★');
     default:
       return el.span({className: 'label label-primary'}, '☆');
   }
@@ -469,8 +469,8 @@ var chatStore = new Store('chat', {
 var betStore = new Store('bet', {
   nextHash: undefined,
   wager: {
-    str: '0.00000001',
-    num: 0.00000001,
+    str: '0.000001',
+    num: 0.000001,
     error: undefined
   },
   multiplier: {
@@ -480,8 +480,8 @@ var betStore = new Store('bet', {
   },
   hotkeysEnabled: false,
   automaticWager: {
-      str: '0.00000001',
-      num: 0.00000001,
+      str: '0.000001',
+      num: 0.000001,
       error: undefined
   },
   automaticMultiplierWager: {
@@ -544,10 +544,10 @@ var betStore = new Store('bet', {
 
     // Ensure wagerString is a number
     //if (isNaN(n) || /[^\d]/.test(n.toString())) {
-	if (n < 0.00000001) {
+	if (n < 0.000001) {
       self.state.wager.error = 'INVALID_WAGER';
     // Ensure user can afford balance
-    } else if (n / 0.00000001 > worldStore.state.user.balance) {
+    } else if (n / 0.000001 > worldStore.state.user.balance) {
       self.state.wager.error = 'CANNOT_AFFORD_WAGER';
       self.state.wager.num = n;
     } else {
@@ -564,7 +564,7 @@ var betStore = new Store('bet', {
         }
       }
     }
-	if (isNumeric(n) && (n < 0.00000001)){
+	if (isNumeric(n) && (n < 0.000001)){
 		self.state.wager.error = 'INVALID_WAGER';
 	} else {
 	    self.state.wager.error = null; // z
@@ -605,7 +605,7 @@ var betStore = new Store('bet', {
 		if (n < 1) {
           self.state.automaticWager.error = 'INVALID_WAGER';
         // Ensure user can afford balance
-        } else if (n / 0.00000001 > worldStore.state.user.balance) {
+        } else if (n / 0.000001 > worldStore.state.user.balance) {
           self.state.automaticWager.error = 'CANNOT_AFFORD_WAGER';
           self.state.automaticWager.num = n;
         } else {
@@ -630,7 +630,7 @@ var betStore = new Store('bet', {
     Dispatcher.registerCallback('AUTOMATE_TOGGLE_ROLL', function() {
         console.log('[BetStore] received AUTOMATE_TOGGLE_ROLL');
         betStore.state.automaticToggle = true;
-        var balance = worldStore.state.user.balance * 0.00000001;
+        var balance = worldStore.state.user.balance * 0.000001;
         var stop = false;
         if(betStore.state.checkBoxNumberOfBet === 'true' && (betStore.state.betCounter + 1) == self.state.NumberOfBetLimit.str){
             stop = true;
@@ -676,7 +676,7 @@ var betStore = new Store('bet', {
     
     Dispatcher.registerCallback("AUGMENT_PROFIT", function(multi){
         var profitQuantity = betStore.state.profitGained.num * Number(multi);
-        var balanceQuantity = worldStore.state.user.balance * 0.00000001;
+        var balanceQuantity = worldStore.state.user.balance * 0.000001;
         if(balanceQuantity > profitQuantity){
             betStore.state.profitGained.num = profitQuantity;
             //betStore.state.profitGained.num = Number(betStore.state.profitGained.num.toFixed(0));
@@ -822,11 +822,11 @@ var worldStore = new Store('world', {
   });
 
   // This is only for my bets? Then change to 'NEW_MY_BET'
- // Dispatcher.registerCallback('NEW_BET', function(bet) {
-//    console.assert(typeof bet === 'object');
-//    self.state.bets.push(bet);
-  //  self.emitter.emit('change', self.state);
- // });
+  Dispatcher.registerCallback('NEW_BET', function(bet) {
+    console.assert(typeof bet === 'object');
+    self.state.bets.push(bet);
+    self.emitter.emit('change', self.state);
+  });
 
   Dispatcher.registerCallback('NEW_ALL_BET', function(bet) {
     self.state.allBets.push(bet);
@@ -910,7 +910,7 @@ var UserBox = React.createClass({
     var windowName = 'manage-auth';
     var windowOpts = [
       'width=420',
-      'height=600',
+      'height=350',
       'left=100',
       'top=100'
     ].join(',');
@@ -923,7 +923,7 @@ var UserBox = React.createClass({
     var windowName = 'manage-auth';
     var windowOpts = [
       'width=420',
-      'height=650',
+      'height=550',
       'left=100',
       'top=100'
     ].join(',');
@@ -948,7 +948,7 @@ var UserBox = React.createClass({
           el.button(
             {
               type: 'button',
-              className: 'btn navbar-btn btn-xs ' + (betStore.state.wager.error === 'CANNOT_AFFOR =(' ? 'btn-success' : 'btn-default'),
+              className: 'btn navbar-btn btn-xs ' + (betStore.state.wager.error === 'CANNOT_AFFORD_WAGER' ? 'btn-success' : 'btn-default'),
               onClick: this._openDepositPopup
             },
             'Deposit'
@@ -968,12 +968,12 @@ var UserBox = React.createClass({
             className: 'navbar-text',
             style: {marginRight: '5px'}
           },
-          (worldStore.state.user.balance * 0.00000001) + ' BTC',
+          (worldStore.state.user.balance * 0.000001) + ' BTC',
           !worldStore.state.user.unconfirmed_balance ?
            '' :
            el.span(
              {style: { color: '#e67e22'}},
-             ' + ' + (worldStore.state.user.unconfirmed_balance * 0.00000001) + ' BTC pending'
+             ' + ' + (worldStore.state.user.unconfirmed_balance * 0.000001) + ' BTC pending'
            )
         ),
         // Refresh button
@@ -1424,7 +1424,7 @@ var BetBoxMultiplier = React.createClass({
     if (isNaN(num) || !isFloatRegexp.test(newStr)) {
       Dispatcher.sendAction('UPDATE_MULTIPLIER', { error: 'INVALID_MULTIPLIER' });
       // Ensure multiplier is >= 1.00x
-    } else if (num < 0.01) {
+    } else if (num < 1.01) {
       Dispatcher.sendAction('UPDATE_MULTIPLIER', { error: 'MULTIPLIER_TOO_LOW' });
       // Ensure multiplier is <= max allowed multiplier (100x for now)
     } else if (num > 9900) {
@@ -1618,12 +1618,12 @@ var BetBoxButton = React.createClass({
       console.log('Placing bet...');
 
       // Indicate that we are waiting for server response
-      self.setState({ waitingForServer: false });
+      self.setState({ waitingForServer: true });
 
       var hash = betStore.state.nextHash;
       console.assert(typeof hash === 'string');
 
-      var wagerSatoshis = betStore.state.wager.num / 0.00000001;
+      var wagerSatoshis = betStore.state.wager.num / 0.000001;
       var multiplier = betStore.state.multiplier.num;
       var payoutSatoshis = wagerSatoshis * multiplier;
 
@@ -1973,11 +1973,11 @@ var ToggleAutomaticRoll = React.createClass({
         Dispatcher.sendAction('AUTOMATIC_BET_WAGER_STATE');
         this.forceUpdate();
   },
-  //_numberOfBet: function(e){
-    //  console.log(e.currentTarget.value);
-      //Dispatcher.sendAction("SET_AUTOMATIC_NUMBER_OF_BETS", e.currentTarget.value);
-     // this.forceUpdate();
-  //},
+  _numberOfBet: function(e){
+      console.log(e.currentTarget.value);
+      Dispatcher.sendAction("SET_AUTOMATIC_NUMBER_OF_BETS", e.currentTarget.value);
+      this.forceUpdate();
+  },
   _stopRoll: function(){
       Dispatcher.sendAction("STOP_ROLL");
   },
@@ -1993,13 +1993,13 @@ var ToggleAutomaticRoll = React.createClass({
     Dispatcher.sendAction("SET_STOP_MIN_BALANCE", e.currentTarget.value);
     this.forceUpdate();
   },
- // _newLimitNumberOfBet: function(e){
- //     console.log(betStore.state.disableNumberOfBet + "nuevo limite");
-   //   var str = e.currentTarget.value;
-     // Dispatcher.sendAction("UPDATE_NUMBER_OF_BETS_LIMIT", {str: str});
+  _newLimitNumberOfBet: function(e){
+      console.log(betStore.state.disableNumberOfBet + "nuevo limite");
+      var str = e.currentTarget.value;
+      Dispatcher.sendAction("UPDATE_NUMBER_OF_BETS_LIMIT", {str: str});
       
-      //this.forceUpdate();
-  //},
+      this.forceUpdate();
+  },
     _makeBetHandler: function(cond) {
     var self = this;
     
@@ -2017,7 +2017,7 @@ var ToggleAutomaticRoll = React.createClass({
                   var hash = betStore.state.nextHash;
                   console.assert(typeof hash === 'string');
                   
-                  var wagerSatoshis = betStore.state.profitGained.num / 0.00000001;
+                  var wagerSatoshis = betStore.state.profitGained.num / 0.000001;
                   var multiplier = betStore.state.multiplier.num;
                   var payoutSatoshis = wagerSatoshis * multiplier;
                   
@@ -2118,7 +2118,7 @@ var ToggleAutomaticRoll = React.createClass({
               // If there's a betbox error, then render button in error state
             
               var errorTranslations = {
-                'CANNOT_AFFORD_WAGER': 'U 2 poor =(',
+                'CANNOT_AFFORD_WAGER': 'You cannot afford wager',
                 'INVALID_WAGER': 'Invalid wager',
                 'INVALID_MULTIPLIER': 'Invalid multiplier',
                 'MULTIPLIER_TOO_PRECISE': 'Multiplier too precise',
@@ -2481,7 +2481,7 @@ var MyBetsTabContent = React.createClass({
               // wager
               el.td(
                 null,
-                helpers.round10(bet.wager* 0.00000001, -8),
+                helpers.round10(bet.wager* 0.000001, -8),
                 ' BTC'
               ),
               // target
@@ -2501,8 +2501,8 @@ var MyBetsTabContent = React.createClass({
               el.td(
                 {style: {color: bet.profit > 0 ? 'green' : 'red'}},
                 bet.profit > 0 ?
-                  '+' + helpers.round10(bet.profit*0.00000001, -8) :
-                  helpers.round10(bet.profit*0.00000001, -8),
+                  '+' + helpers.round10(bet.profit*0.000001, -8) :
+                  helpers.round10(bet.profit*0.000001, -8),
                 ' BTC'
               )
             );
@@ -2520,17 +2520,17 @@ var FairnessTabContent = React.createClass({
       innerNode = el.p(
         {className: 'navbar-text'},
 			  el.p({className: 'lead'}, " "),
-			  el.p({className: 'lead'), "YOLO ?!"),
+			  el.p({className: 'lead'), "99 DICE ?!"),
 			  el.p({className: 'lead'}, "How do I fund my account?"),
 			  el.p(null, "In order to play you will need a balance.  You can use the free faucet to try out some bets for free or you can fund your MoneyPot account.  You will need to sign-up for a free account with MoneyPot in order to play here.  After you have created an account you add the InvestDice casino app to you MoneyPot account.  Under your MoneyPot account page, you can find the deposit button to generate a new BTC deposit address.  Deposits are available to you after 1 confirmation.  Once your account is funded you can click on deposit from inside the app to bring coins over to play with."),
 			  el.p({className: 'lead'}, "How do I play?"),
-			  el.p(null, "After you have funded your YOLO app you can then change the wager amount and the multiplier to an amount of your choosing.  By pressing Bet High or Bet Low you initiate the betting sequence.  The result is shown below under the All Bets tab and under the My Bets Tab.  If you wish you can change the seed to a custom number from 0-99999999"),
+			  el.p(null, "After you have funded your 99 DICE app you can then change the wager amount and the multiplier to an amount of your choosing.  By pressing Bet High or Bet Low you initiate the betting sequence.  The result is shown below under the All Bets tab and under the My Bets Tab.  If you wish you can change the seed to a custom number from 0-99999999"),
 			  el.p({className: 'lead'}, "Provable Fairness:"),
 			  el.p(null, "Bets made are all provably fair.  How does this work? Before each bet is made a hash is generated by MoneyPot and is sent to the site, this is then combined with the bet+seed and sent back to the MoneyPot bet API and the result is then returned, in a number between 0 and 99.9999. The script on the casino automatically verifies each bet to ensure that your roll outcome was predetermined. (Provably Fair)"),
 			  el.p({className: 'lead'}, "Legal Disclaimer:"),
-			  el.p(null, "Please ensure that gambling is legal in your jurisdiction, YOLO is an Online Gaming site and may not be legal in all places.  It is your responsibility to know your local laws.  By using this site you agree that online gambling is legal where you are."),
+			  el.p(null, "Please ensure that gambling is legal in your jurisdiction, 99 DICE is an Online Gaming site and may not be legal in all places.  It is your responsibility to know your local laws.  By using this site you agree that online gambling is legal where you are."),
 			  el.p({className: 'lead'}, "What if I can’t stop?"),
-			  el.p(null, "If you have a problem gambling there are various services available.  Please see gamblinghelp.org, ncpgambling.org and helpguide.org or search google for many more.  Remember you can lose when playing and only risk what you are willing to lose. YOLO is not responsible for mistaken bets or funds lost with MoneyPot."),
+			  el.p(null, "If you have a problem gambling there are various services available.  Please see gamblinghelp.org, ncpgambling.org and helpguide.org or search google for many more.  Remember you can lose when playing and only risk what you are willing to lose. 99 DICE is not responsible for mistaken bets or funds lost with MoneyPot."),
 			  el.p(null, " ")
       );
 	  
@@ -2629,7 +2629,7 @@ var FaucetTabContent = React.createClass({
     case 'SUCCESSFULLY_CLAIMED':
       innerNode = el.div(
         null,
-        'Successfully claimed ' + this.state.claimAmount*0.00000001 + ' BTC.' +
+        'Successfully claimed ' + this.state.claimAmount*0.000001 + ' BTC.' +
           // TODO: What's the real interval?
           ' You can claim again in 5 minutes.'
       );
@@ -2695,7 +2695,7 @@ var BetRow = React.createClass({
       // Wager
       el.td(
         null,
-        helpers.round10(bet.wager*0.00000001, -8),
+        helpers.round10(bet.wager*0.000001, -8),
         ' BTC'
       ),
       // Target
@@ -2805,8 +2805,8 @@ var BetRow = React.createClass({
           }
         },
         bet.profit > 0 ?
-          '+' + helpers.round10(bet.profit*0.00000001, -8) :
-          helpers.round10(bet.profit*0.00000001, -8),
+          '+' + helpers.round10(bet.profit*0.000001, -8) :
+          helpers.round10(bet.profit*0.000001, -8),
         ' BTC'
       )
     );
@@ -2874,13 +2874,13 @@ var TabContent = React.createClass({
   },
   render: function() {
     switch(worldStore.state.currTab) {
-      case 'BEG THE FAUCET':
+      case 'FAUCET':
         return React.createElement(FaucetTabContent, null);
 	  case 'FAIRNESS':
         return React.createElement(FairnessTabContent, null);
       case 'MY_BETS':
         return React.createElement(MyBetsTabContent, null);
-      case 'HIGH_ROLLER':
+      case 'ALL_BETS':
         return React.createElement(AllBetsTabContent, null);
       default:
         alert('Unsupported currTab value: ', worldStore.state.currTab);
@@ -3037,8 +3037,8 @@ function connectToChatServer() {
 
     socket.on('new_bet', function(bet) {
 
-  // ignore bets that wager < 0.1 btc 
-  if (bet.wager < 10000000) {
+  // ignore bets that wager < 0.005 btc (500,000 satoshi)
+  if (bet.wager < 500000) {
     return;
   }
 
