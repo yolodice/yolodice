@@ -2,35 +2,37 @@
 
 // Customize these configuration settings:
 
-var config = {
-  // - Your app's id on moneypot.com
-  app_id: 685,                             // <----------------------------- EDIT ME!
-  // - Displayed in the navbar
-  app_name: 'DICE 99',
-  // - For your faucet to work, you must register your site at Recaptcha
-  // - https://www.google.com/recaptcha/intro/index.html
-  recaptcha_sitekey: '6LdByQ8TAAAAAO2uQJeJsm3rhVfHZTFNcOC51MZX',  // <----- EDIT ME!
-  redirect_uri: 'https://99dice.github.io',
-  mp_browser_uri: 'https://www.moneypot.com',
-  mp_api_uri: 'https://api.moneypot.com',
-  chat_uri: '//socket.moneypot.com',
-  // - Show debug output only if running on localhost
-  debug: isRunningLocally(),
-  // - Set this to true if you want users that come to http:// to be redirected
-  //   to https://
-  force_https_redirect: !isRunningLocally(),
-  // - Configure the house edge (default is 1%)
-  //   Must be between 0.0 (0%) and 1.0 (100%)
-  house_edge: 0.03,
-  chat_buffer_size: 250,
-  // - The amount of bets to show on screen in each tab
-  bet_buffer_size: 25
-};
+5 var config = { 
+6   // - Your app's id on moneypot.com 
+7   app_id: 685,                             // <----------------------------- EDIT ME! 
+8   // - Displayed in the navbar 
+9   app_name: '99 DICE', 
+10   // - For your faucet to work, you must register your site at Recaptcha 
+11   // - https://www.google.com/recaptcha/intro/index.html 
+12   recaptcha_sitekey: '6LdByQ8TAAAAAO2uQJeJsm3rhVfHZTFNcOC51MZX',  // <----- EDIT ME! 
+13   redirect_uri: 'https://99dice.github.io', 
+14   mp_browser_uri: 'https://www.moneypot.com', 
+15   mp_api_uri: 'https://api.moneypot.com', 
+16   chat_uri: '//socket.moneypot.com', 
+17   // - Show debug output only if running on localhost 
+18   debug: isRunningLocally(), 
+19   // - Set this to true if you want users that come to http:// to be redirected 
+20   //   to https:// 
+21   force_https_redirect: !isRunningLocally(), 
+22   // - Configure the house edge (default is 1%) 
+23   //   Must be between 0.0 (0%) and 1.0 (100%) 
+24   house_edge: 0.03, 
+25   chat_buffer_size: 50, 
+26   // - The amount of bets to show on screen in each tab 
+27   bet_buffer_size: 25 
+28 }; 
 
 ////////////////////////////////////////////////////////////
 // You shouldn't have to edit anything below this line
 ////////////////////////////////////////////////////////////
-
+function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
 // Validate the configured house edge
 (function() {
   var errString;
@@ -113,11 +115,11 @@ helpers.roleToLabelElement = function(role) {
     case 'ADMIN':
       return el.span({className: 'label label-danger'}, 'MP Staff');
     case 'MOD':
-      return el.span({className: 'label label-info'}, 'Mod');
+      return el.span({className: 'label label-info'}, '☆V.I.P☆');
     case 'OWNER':
-      return el.span({className: 'label label-primary'}, 'Owner');
+      return el.span({className: 'label label-primary'}, '★Owner★');
     default:
-      return '';
+      return el.span({className: 'label label-primary'}, '☆');
   }
 };
 
@@ -241,7 +243,7 @@ var MoneyPot = (function() {
       }
     });
   };
-  
+
   o.getTokenInfo = function(callbacks) {
     var endpoint = '/token';
     makeMPRequest('GET', undefined, endpoint, callbacks);
@@ -476,8 +478,8 @@ var betStore = new Store('bet', {
     num: 2.00,
     error: undefined
   },
-  hotkeysEnabled: false
-automaticWager: {
+  hotkeysEnabled: false,
+  automaticWager: {
       str: '0.000001',
       num: 0.000001,
       error: undefined
@@ -492,8 +494,8 @@ automaticWager: {
     error: undefined
   },
   clientSeed: {
-    str: '1234567890',
-    num: 1234567890,
+    str: '6969',
+    num: 6969,
     error:void 0
   },
   showAutomaticRoll: false,
@@ -529,25 +531,28 @@ automaticWager: {
   Dispatcher.registerCallback('UPDATE_WAGER', function(newWager) {
     self.state.wager = _.merge({}, self.state.wager, newWager);
 
-    var n = self.state.wager.str;
+    //var n = parseInt(self.state.wager.str, 10);
+	//var n = parseInt("1.3", 10);
+	var n = self.state.wager.str;
 
     // If n is a number, ensure it's at least 1 bit
     //if (isFinite(n)) {
       //n = Math.max(n, 1);
       self.state.wager.str = n.toString();
     //}
+	
 
     // Ensure wagerString is a number
     //if (isNaN(n) || /[^\d]/.test(n.toString())) {
-    if (n < 0.00000001)
-	  self.state.wager.error = 'INVALID_WAGER';
+	if (n < 0.000001) {
+      self.state.wager.error = 'INVALID_WAGER';
     // Ensure user can afford balance
-    } else if (n * 0.00000001 > worldStore.state.user.balance) {
+    } else if (n / 0.00000001 > worldStore.state.user.balance) {
       self.state.wager.error = 'CANNOT_AFFORD_WAGER';
       self.state.wager.num = n;
     } else {
       // wagerString is valid
-	  if (n > 7){
+      if (n > 7){
         self.state.wager.error = 'CANNOT_AFFORD_WAGER';
         self.state.wager.num = n;
       } else {
@@ -559,14 +564,14 @@ automaticWager: {
         }
       }
     }
-    if (isNumeric(n) && (n < 0.000001)){
+	if (isNumeric(n) && (n < 0.000001)){
 		self.state.wager.error = 'INVALID_WAGER';
 	} else {
 	    self.state.wager.error = null; // z
 	    self.state.wager.str = n.toString(); // z
 	    self.state.wager.num = n; // z
 	}
-	
+
     self.emitter.emit('change', self.state);
   });
 
@@ -582,8 +587,8 @@ automaticWager: {
     self.state.clientSeed.num = n),
     self.emitter.emit("change", self.state)
   });
-  
-    Dispatcher.registerCallback('UPDATE_AUTOMATIC_WAGER', function(newWager) {
+
+  Dispatcher.registerCallback('UPDATE_AUTOMATIC_WAGER', function(newWager) {
         self.state.automaticWager = _.merge({}, self.state.automaticWager, newWager);
         
         //var n = parseInt(self.state.automaticWager.str, 10);
@@ -756,11 +761,6 @@ automaticWager: {
     self.emitter.emit('change', self.state);
   });
 });
-  Dispatcher.registerCallback('UPDATE_MULTIPLIER', function(newMult) {
-    self.state.multiplier = _.merge({}, self.state.multiplier, newMult);
-    self.emitter.emit('change', self.state);
-  });
-});
 
 // The general store that holds all things until they are separated
 // into smaller stores for performance.
@@ -923,7 +923,7 @@ var UserBox = React.createClass({
     var windowName = 'manage-auth';
     var windowOpts = [
       'width=420',
-      'height=350',
+      'height=550',
       'left=100',
       'top=100'
     ].join(',');
@@ -968,12 +968,12 @@ var UserBox = React.createClass({
             className: 'navbar-text',
             style: {marginRight: '5px'}
           },
-          (worldStore.state.user.balance / 100) + ' bits',
+          (worldStore.state.user.balance * 0.00000001) + ' BTC',
           !worldStore.state.user.unconfirmed_balance ?
            '' :
            el.span(
              {style: { color: '#e67e22'}},
-             ' + ' + (worldStore.state.user.unconfirmed_balance / 100) + ' bits pending'
+             ' + ' + (worldStore.state.user.unconfirmed_balance * 0.00000001) + ' BTC pending'
            )
         ),
         // Refresh button
