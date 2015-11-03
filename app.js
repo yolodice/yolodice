@@ -104,7 +104,7 @@ helpers.calcNumber = function(cond, winProb) {
   if (cond === '<') {
     return winProb * 100;
   } else {
-    return 99.99 - (winProb * 100);
+    return 99.9999 - (winProb * 100);
   }
 };
 
@@ -276,7 +276,7 @@ var MoneyPot = (function() {
   // - client_seed: Int in range [0, 0^32)
   // - hash: BetHash
   // - cond: '<' | '>'
-  // - number: Int in range [0, 99.99] that cond applies to
+  // - number: Int in range [0, 99.9999] that cond applies to
   // - payout: how many satoshis to pay out total on win (wager * multiplier)
   o.placeSimpleDiceBet = function(bodyParams, callbacks) {
     var endpoint = '/bets/simple-dice';
