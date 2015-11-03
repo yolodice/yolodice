@@ -1379,7 +1379,7 @@ var BetBoxProfit = React.createClass({
           className: 'lead',
           style: { color: '#39b54a' }
         },
-        '+' + profit.toFixed(2)
+        '+' + profit.toFixed(8)
       );
     }
 
@@ -1507,19 +1507,19 @@ var BetBoxWager = React.createClass({
     //var newWager = Math.round(betStore.state.wager.num / 2);
 	if (betStore.state.wager.num != 0){
 		var newWager = (betStore.state.wager.num / 2);
-	}	
+	}
     Dispatcher.sendAction('UPDATE_WAGER', { str: newWager.toString() });
   },
   _onDoubleWager: function() {
     var n = betStore.state.wager.num * 2;
     Dispatcher.sendAction('UPDATE_WAGER', { str: n.toString() });
-
   },
   _onMaxWager: function() {
     // If user is logged in, use their balance as max wager
     var balanceBits;
     if (worldStore.state.user) {
-      balanceBits = Math.floor(worldStore.state.user.balance / 100);
+      balanceBits = worldStore.state.user.balance * .00000001;
+      balanceBits = Math.floor(balanceBits * 1000000) / 1000000;
     } else {
       balanceBits = 42000;
     }
@@ -1547,7 +1547,7 @@ var BetBoxWager = React.createClass({
           style: style1,
           onChange: this._onWagerChange,
           disabled: !!worldStore.state.isLoading,
-          placeholder: 'Bits'
+          placeholder: 'BTC'
         }
       ),
       el.div(
