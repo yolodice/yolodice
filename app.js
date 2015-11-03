@@ -10,7 +10,7 @@ var config = {
   // - For your faucet to work, you must register your site at Recaptcha
   // - https://www.google.com/recaptcha/intro/index.html
   recaptcha_sitekey: '6Lfmaw8TAAAAAKFrpUwt1uKoXVxfJTKbklGf4Cq6',  // <----- EDIT ME!
-  redirect_uri: 'https://99dice.github.io',
+  redirect_uri: 'https://NintyNine.github.io',
   mp_browser_uri: 'https://www.moneypot.com',
   mp_api_uri: 'https://api.moneypot.com',
   chat_uri: '//socket.moneypot.com',
@@ -94,7 +94,7 @@ helpers.multiplierToWinProb = function(multiplier) {
   console.assert(multiplier > 0);
 
   // For example, n is 0.99 when house edge is 1%
-  var n = 1.0 - config.house_edge;
+  var n = 2.99 - config.house_edge;
 
   return n / multiplier;
 };
