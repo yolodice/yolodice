@@ -1,31 +1,33 @@
-// 99 DICE v0.0.8
-
-// Customize these configuration settings:
-
-var config = {
-  // - Your app's id on moneypot.com
-  app_id: 685,                             // <----------------------------- EDIT ME!
-  // - Displayed in the navbar
-  app_name: '99 Dice',
-  // - For your faucet to work, you must register your site at Recaptcha
-  // - https://www.google.com/recaptcha/intro/index.html
-  recaptcha_sitekey: '6Lfmaw8TAAAAAKFrpUwt1uKoXVxfJTKbklGf4Cq6',  // <----- EDIT ME!
-  redirect_uri: 'https://NintyNine.github.io',
-  mp_browser_uri: 'https://www.moneypot.com',
-  mp_api_uri: 'https://api.moneypot.com',
-  chat_uri: '//socket.moneypot.com',
-  // - Show debug output only if running on localhost
-  debug: isRunningLocally(),
-  // - Set this to true if you want users that come to http:// to be redirected
-  //   to https://
-  force_https_redirect: !isRunningLocally(),
-  // - Configure the house edge (default is 1%)
-  //   Must be between 0.0 (0%) and 1.0 (100%)
-  house_edge: 0.03,
- chat_buffer_size: 50,
-  // - The amount of bets to show on screen in each tab
-  bet_buffer_size: 25
-};
+// Untitled Dice v0.0.8 
+2 
+ 
+3 // Customize these configuration settings: 
+4 
+ 
+5 var config = { 
+6   // - Your app's id on moneypot.com 
+7   app_id: 685,                             // <----------------------------- EDIT ME! 
+8   // - Displayed in the navbar 
+9   app_name: '99 DICE', 
+10   // - For your faucet to work, you must register your site at Recaptcha 
+11   // - https://www.google.com/recaptcha/intro/index.html 
+12   recaptcha_sitekey: '6LdByQ8TAAAAAO2uQJeJsm3rhVfHZTFNcOC51MZX',  // <----- EDIT ME! 
+13   redirect_uri: 'https://99dice.github.io', 
+14   mp_browser_uri: 'https://www.moneypot.com', 
+15   mp_api_uri: 'https://api.moneypot.com', 
+16   chat_uri: '//socket.moneypot.com', 
+17   // - Show debug output only if running on localhost 
+18   debug: isRunningLocally(), 
+19   // - Set this to true if you want users that come to http:// to be redirected 
+20   //   to https:// 
+21   force_https_redirect: !isRunningLocally(), 
+22   // - Configure the house edge (default is 1%) 
+23   //   Must be between 0.0 (0%) and 1.0 (100%) 
+24   house_edge: 0.03, 
+25   chat_buffer_size: 50, 
+26   // - The amount of bets to show on screen in each tab 
+27   bet_buffer_size: 25 
+28 }; 
 
 ////////////////////////////////////////////////////////////
 // You shouldn't have to edit anything below this line
@@ -94,7 +96,7 @@ helpers.multiplierToWinProb = function(multiplier) {
   console.assert(multiplier > 0);
 
   // For example, n is 0.99 when house edge is 1%
-  var n = 2.99 - config.house_edge;
+  var n = 1.0 - config.house_edge;
 
   return n / multiplier;
 };
@@ -106,7 +108,7 @@ helpers.calcNumber = function(cond, winProb) {
   if (cond === '<') {
     return winProb * 100;
   } else {
-    return 99.9999 - (winProb * 100);
+    return 99.99 - (winProb * 100);
   }
 };
 
@@ -273,7 +275,7 @@ var MoneyPot = (function() {
   // - client_seed: Int in range [0, 0^32)
   // - hash: BetHash
   // - cond: '<' | '>'
-  // - number: Int in range [0, 99.9999] that cond applies to
+  // - number: Int in range [0, 99.99] that cond applies to
   // - payout: how many satoshis to pay out total on win (wager * multiplier)
   o.placeSimpleDiceBet = function(bodyParams, callbacks) {
     var endpoint = '/bets/simple-dice';
@@ -494,8 +496,8 @@ var betStore = new Store('bet', {
     error: undefined
   },
   clientSeed: {
-    str: '1234567890',
-    num: 1234567890,
+    str: '6969',
+    num: 6969,
     error:void 0
   },
   showAutomaticRoll: false,
@@ -547,7 +549,7 @@ var betStore = new Store('bet', {
 	if (n < 0.000001) {
       self.state.wager.error = 'INVALID_WAGER';
     // Ensure user can afford balance
-    } else if (n / 0.000001 > worldStore.state.user.balance) {
+    } else if (n / 0.00000001 > worldStore.state.user.balance) {
       self.state.wager.error = 'CANNOT_AFFORD_WAGER';
       self.state.wager.num = n;
     } else {
@@ -605,7 +607,7 @@ var betStore = new Store('bet', {
 		if (n < 1) {
           self.state.automaticWager.error = 'INVALID_WAGER';
         // Ensure user can afford balance
-        } else if (n / 0.000001 > worldStore.state.user.balance) {
+        } else if (n / 0.00000001 > worldStore.state.user.balance) {
           self.state.automaticWager.error = 'CANNOT_AFFORD_WAGER';
           self.state.automaticWager.num = n;
         } else {
@@ -630,7 +632,7 @@ var betStore = new Store('bet', {
     Dispatcher.registerCallback('AUTOMATE_TOGGLE_ROLL', function() {
         console.log('[BetStore] received AUTOMATE_TOGGLE_ROLL');
         betStore.state.automaticToggle = true;
-        var balance = worldStore.state.user.balance * 0.000001;
+        var balance = worldStore.state.user.balance * 0.00000001;
         var stop = false;
         if(betStore.state.checkBoxNumberOfBet === 'true' && (betStore.state.betCounter + 1) == self.state.NumberOfBetLimit.str){
             stop = true;
@@ -676,7 +678,7 @@ var betStore = new Store('bet', {
     
     Dispatcher.registerCallback("AUGMENT_PROFIT", function(multi){
         var profitQuantity = betStore.state.profitGained.num * Number(multi);
-        var balanceQuantity = worldStore.state.user.balance * 0.000001;
+        var balanceQuantity = worldStore.state.user.balance * 0.00000001;
         if(balanceQuantity > profitQuantity){
             betStore.state.profitGained.num = profitQuantity;
             //betStore.state.profitGained.num = Number(betStore.state.profitGained.num.toFixed(0));
@@ -968,12 +970,12 @@ var UserBox = React.createClass({
             className: 'navbar-text',
             style: {marginRight: '5px'}
           },
-          (worldStore.state.user.balance * 0.000001) + ' BTC',
+          (worldStore.state.user.balance * 0.00000001) + ' BTC',
           !worldStore.state.user.unconfirmed_balance ?
            '' :
            el.span(
              {style: { color: '#e67e22'}},
-             ' + ' + (worldStore.state.user.unconfirmed_balance * 0.000001) + ' BTC pending'
+             ' + ' + (worldStore.state.user.unconfirmed_balance * 0.00000001) + ' BTC pending'
            )
         ),
         // Refresh button
@@ -1623,7 +1625,7 @@ var BetBoxButton = React.createClass({
       var hash = betStore.state.nextHash;
       console.assert(typeof hash === 'string');
 
-      var wagerSatoshis = betStore.state.wager.num / 0.000001;
+      var wagerSatoshis = betStore.state.wager.num / 0.00000001;
       var multiplier = betStore.state.multiplier.num;
       var payoutSatoshis = wagerSatoshis * multiplier;
 
@@ -2017,7 +2019,7 @@ var ToggleAutomaticRoll = React.createClass({
                   var hash = betStore.state.nextHash;
                   console.assert(typeof hash === 'string');
                   
-                  var wagerSatoshis = betStore.state.profitGained.num / 0.000001;
+                  var wagerSatoshis = betStore.state.profitGained.num / 0.00000001;
                   var multiplier = betStore.state.multiplier.num;
                   var payoutSatoshis = wagerSatoshis * multiplier;
                   
@@ -2481,7 +2483,7 @@ var MyBetsTabContent = React.createClass({
               // wager
               el.td(
                 null,
-                helpers.round10(bet.wager* 0.000001, -8),
+                helpers.round10(bet.wager* 0.00000001, -8),
                 ' BTC'
               ),
               // target
@@ -2501,8 +2503,8 @@ var MyBetsTabContent = React.createClass({
               el.td(
                 {style: {color: bet.profit > 0 ? 'green' : 'red'}},
                 bet.profit > 0 ?
-                  '+' + helpers.round10(bet.profit*0.000001, -8) :
-                  helpers.round10(bet.profit*0.000001, -8),
+                  '+' + helpers.round10(bet.profit*0.00000001, -8) :
+                  helpers.round10(bet.profit*0.00000001, -8),
                 ' BTC'
               )
             );
@@ -2520,17 +2522,17 @@ var FairnessTabContent = React.createClass({
       innerNode = el.p(
         {className: 'navbar-text'},
 			  el.p({className: 'lead'}, " "),
-			  el.p({className: 'lead'), "99 DICE ?!"),
+			  el.p({className: 'lead'}, "Welcome to Invest Dice"),
 			  el.p({className: 'lead'}, "How do I fund my account?"),
 			  el.p(null, "In order to play you will need a balance.  You can use the free faucet to try out some bets for free or you can fund your MoneyPot account.  You will need to sign-up for a free account with MoneyPot in order to play here.  After you have created an account you add the InvestDice casino app to you MoneyPot account.  Under your MoneyPot account page, you can find the deposit button to generate a new BTC deposit address.  Deposits are available to you after 1 confirmation.  Once your account is funded you can click on deposit from inside the app to bring coins over to play with."),
 			  el.p({className: 'lead'}, "How do I play?"),
-			  el.p(null, "After you have funded your 99 DICE app you can then change the wager amount and the multiplier to an amount of your choosing.  By pressing Bet High or Bet Low you initiate the betting sequence.  The result is shown below under the All Bets tab and under the My Bets Tab.  If you wish you can change the seed to a custom number from 0-99999999"),
+			  el.p(null, "After you have funded your InvestDice app you can then change the wager amount and the multiplier to an amount of your choosing.  By pressing Bet High or Bet Low you initiate the betting sequence.  The result is shown below under the All Bets tab and under the My Bets Tab.  If you wish you can change the seed to a custom number from 0-99999999"),
 			  el.p({className: 'lead'}, "Provable Fairness:"),
-			  el.p(null, "Bets made are all provably fair.  How does this work? Before each bet is made a hash is generated by MoneyPot and is sent to the site, this is then combined with the bet+seed and sent back to the MoneyPot bet API and the result is then returned, in a number between 0 and 99.9999. The script on the casino automatically verifies each bet to ensure that your roll outcome was predetermined. (Provably Fair)"),
+			  el.p(null, "Bets made are all provably fair.  How does this work? Before each bet is made a hash is generated by MoneyPot and is sent to the site, this is then combined with the bet+seed and sent back to the MoneyPot bet API and the result is then returned, win or lose to the casino.  A script on the casino verifies each bet to ensure that all are provably fair."),
 			  el.p({className: 'lead'}, "Legal Disclaimer:"),
-			  el.p(null, "Please ensure that gambling is legal in your jurisdiction, 99 DICE is an Online Gaming site and may not be legal in all places.  It is your responsibility to know your local laws.  By using this site you agree that online gambling is legal where you are."),
+			  el.p(null, "Please ensure that gambling is legal in your jurisdiction, InvestDice is an Online Gaming site and may not be legal in all places.  It is your responsibility to know your local laws.  By using this site you agree that it is legal to do so where you are."),
 			  el.p({className: 'lead'}, "What if I can’t stop?"),
-			  el.p(null, "If you have a problem gambling there are various services available.  Please see gamblinghelp.org, ncpgambling.org and helpguide.org or search google for many more.  Remember you can lose when playing and only risk what you are willing to lose. 99 DICE is not responsible for mistaken bets or funds lost with MoneyPot."),
+			  el.p(null, "If you have a problem gambling there are various services available.  Please see gamblinghelp.org, ncpgambling.org and helpguide.org or search google for many more.  Remember you can lose when playing and only risk what you are willing to lose. InvestDice is not responsible for mistaken bets or funds lost with MoneyPot."),
 			  el.p(null, " ")
       );
 	  
@@ -2629,7 +2631,7 @@ var FaucetTabContent = React.createClass({
     case 'SUCCESSFULLY_CLAIMED':
       innerNode = el.div(
         null,
-        'Successfully claimed ' + this.state.claimAmount*0.000001 + ' BTC.' +
+        'Successfully claimed ' + this.state.claimAmount*0.00000001 + ' BTC.' +
           // TODO: What's the real interval?
           ' You can claim again in 5 minutes.'
       );
@@ -2695,7 +2697,7 @@ var BetRow = React.createClass({
       // Wager
       el.td(
         null,
-        helpers.round10(bet.wager*0.000001, -8),
+        helpers.round10(bet.wager*0.00000001, -8),
         ' BTC'
       ),
       // Target
@@ -2805,8 +2807,8 @@ var BetRow = React.createClass({
           }
         },
         bet.profit > 0 ?
-          '+' + helpers.round10(bet.profit*0.000001, -8) :
-          helpers.round10(bet.profit*0.000001, -8),
+          '+' + helpers.round10(bet.profit*0.00000001, -8) :
+          helpers.round10(bet.profit*0.00000001, -8),
         ' BTC'
       )
     );
