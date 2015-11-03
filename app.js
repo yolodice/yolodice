@@ -21,8 +21,8 @@ var config = {
   force_https_redirect: !isRunningLocally(),
   // - Configure the house edge (default is 1%)
   //   Must be between 0.0 (0%) and 1.0 (100%)
-  house_edge: 0.99,
-  chat_buffer_size: 250,
+  house_edge: 0.03,
+  chat_buffer_size: 25,
   // - The amount of bets to show on screen in each tab
   bet_buffer_size: 25
 };
@@ -92,7 +92,7 @@ helpers.multiplierToWinProb = function(multiplier) {
   console.assert(multiplier > 0);
 
   // For example, n is 0.99 when house edge is 1%
-  var n = 1.0 - config.house_edge;
+  var n = 2.99 - config.house_edge;
 
   return n / multiplier;
 };
@@ -104,7 +104,7 @@ helpers.calcNumber = function(cond, winProb) {
   if (cond === '<') {
     return winProb * 100;
   } else {
-    return 99.99 - (winProb * 100);
+    return 99.9999 - (winProb * 100);
   }
 };
 
