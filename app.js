@@ -24,7 +24,7 @@
    house_edge: 0.0199, 
    chat_buffer_size: 50, 
    // - The amount of bets to show on screen in each tab 
-   bet_buffer_size: 25 
+   bet_buffer_size: 10 
  }; 
 
 ////////////////////////////////////////////////////////////
