@@ -9,7 +9,7 @@
  body {
 	 body {
      margin: 0;
-     background: url(https://github.com/99dice/99dice.github.io/blob/master/99.jpg);
+     background: url('https://github.com/99dice/99dice.github.io/blob/master/99.jpg');
      background-size: 1920px 1080px;
      background-repeat:no-repeatdisplay: compact;
      font: 13px/18px "Helvetica Neue", Helvetica, Arial, sans-serif;
