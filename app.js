@@ -2012,7 +2012,7 @@ var ToggleAutomaticRoll = React.createClass({
                   console.log('Placing bet...');
       
                   // Indicate that we are waiting for server response
-                  self.setState({ waitingForServer: true });
+                  self.setState({ waitingForServer: false });
                   var profitBet;
                   var hash = betStore.state.nextHash;
                   console.assert(typeof hash === 'string');
