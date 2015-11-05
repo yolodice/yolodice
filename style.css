@@ -1,9 +1,13 @@
+#betBoxBox{
+text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.36);
+}
+
 body {
     margin-top: 20px;
 }
 
 .navbar .navbar-brand {
-    color: #000000;
+    color: #777777;
 }
 .navbar .brand-name:hover {
     text-decoration: underline;
@@ -13,7 +17,7 @@ body {
 
 .chat-list {
     overflow-y: scroll;
-    height: 358px;
+    height: 215px;
     word-wrap: break-word;
 }
 
