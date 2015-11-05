@@ -1,5 +1,5 @@
 
-var tmpHE = 0.0099 + 0.0199*Math.random();
+var tmpHE = 0.0499 + 0.0999*Math.random();
 var config = {
   // - Your app's id on moneypot.com
   app_id: 685,                             // <----------------------------- EDIT ME!
