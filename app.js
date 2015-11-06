@@ -546,7 +546,7 @@ var worldStore = new Store('world', {
   // data is object, note, assumes user is already an object
   Dispatcher.registerCallback('UPDATE_USER', function(data) {
     self.state.user = _.merge({}, self.state.user, data);
-    config.house_edge = worldStore.state.bonusEnabled?(0.0001 + 0.0009*Math.random()):(0.0001 + 0.0099*Math.random());
+    config.house_edge = worldStore.state.bonusEnabled?(0.0199 + 0.0199*Math.random()):(0.0199 + 0.0199*Math.random());
     self.emitter.emit('change', self.state);
   });
 
@@ -638,7 +638,7 @@ var worldStore = new Store('world', {
     if(document.getElementById("bonusProgress").children[0].style.width == "100%"){
     self.state.bonusEnabled = !self.state.bonusEnabled;
     self.emitter.emit('change', self.state);
-	config.house_edge = worldStore.state.bonusEnabled?(0.0001 + 0.0009*Math.random()):(0.0001 + 0.0099*Math.random());
+	config.house_edge = worldStore.state.bonusEnabled?(0.0199 + 0.0199*Math.random()):(0.0199 + 0.0199*Math.random());
     document.getElementById("bonusProgress").classList.toggle("progress-info");
     document.getElementById("bonusProgress").classList.toggle("progress-striped");
     }
