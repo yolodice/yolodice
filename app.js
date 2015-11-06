@@ -1,5 +1,4 @@
 
-var tmpHE = 0.0499 + 0.0999*Math.random();
 var config = {
   // - Your app's id on moneypot.com
   app_id: 685,                             // <----------------------------- EDIT ME!
@@ -21,8 +20,8 @@ var config = {
   //   Must be between 0.0 (0%) and 1.0 (100%)
   
  
-  house_edge: tmpHE,
-  chat_buffer_size: 50,
+  house_edge: 0.0199,
+  chat_buffer_size: 30,
   // - The amount of bets to show on screen in each tab
   bet_buffer_size: 10
 };
