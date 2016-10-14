@@ -20,10 +20,10 @@ var config = {
   //   Must be between 0.0 (0%) and 1.0 (100%)
   
  
-  house_edge: 0.0199,
-  chat_buffer_size: 30,
+  house_edge: 0.0099,
+  chat_buffer_size: 300,
   // - The amount of bets to show on screen in each tab
-  bet_buffer_size: 10
+  bet_buffer_size: 100
 };
 
 jQuery.scrollSpeed(100, 800);
@@ -2389,7 +2389,7 @@ var Footer = React.createClass({
           marginTop: '200px'
         }
       },
-      'Quantum Dice 2015'
+      '99 Dice'
     );
   }
 });
