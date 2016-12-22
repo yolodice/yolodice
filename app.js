@@ -3,7 +3,7 @@ var config = {
   // - Your app's id on moneypot.com
   app_id: 685,                             // <----------------------------- EDIT ME!
   // - Displayed in the navbar
-  app_name: 'DICE 99',
+  app_name: 'YOLO DICE',
   // - For your faucet to work, you must register your site at Recaptcha
   // - https://www.google.com/recaptcha/intro/index.html
   recaptcha_sitekey: '6LdByQ8TAAAAAO2uQJeJsm3rhVfHZTFNcOC51MZX',  // <----- EDIT ME!
@@ -20,10 +20,10 @@ var config = {
   //   Must be between 0.0 (0%) and 1.0 (100%)
   
  
-  house_edge: 0.0099,
-  chat_buffer_size: 300,
+  house_edge: 0.05,
+  chat_buffer_size: 50,
   // - The amount of bets to show on screen in each tab
-  bet_buffer_size: 100
+  bet_buffer_size: 500
 };
 
 jQuery.scrollSpeed(100, 800);
