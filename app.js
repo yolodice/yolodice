@@ -6,7 +6,7 @@ var config = {
   app_name: 'YOLO DICE',
   // - For your faucet to work, you must register your site at Recaptcha
   // - https://www.google.com/recaptcha/intro/index.html
-  recaptcha_sitekey: '6LdByQ8TAAAAAO2uQJeJsm3rhVfHZTFNcOC51MZX',  // <----- EDIT ME!
+  recaptcha_sitekey: '6LdLiBATAAAAAJxq_vT5QGJZ0ONoyh1HdxPGv5e3',  // <----- EDIT ME!
   redirect_uri: 'https://yolodice.github.io',
   mp_browser_uri: 'https://www.moneypot.com',
   mp_api_uri: 'https://api.moneypot.com',
